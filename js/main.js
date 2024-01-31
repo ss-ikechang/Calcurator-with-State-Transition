@@ -9,7 +9,7 @@ let state = 0;
 // 演算種類記憶文字列
 let operation = "+";
 // 入力バッファ
-let inputBuffer = "";
+let inputBuffer = "0";
 // 計算第１項数値変数
 let data1 = 0;
 // 計算第２項数値変数
@@ -50,7 +50,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 状態１のまま
 
       } else if (action === OPERATIONKEY) {   // 演算キーを押下した場合    
-        data1 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第１項として保存
+        data1 = inputToNumber();              // 入力バッファのデータを数値化し第１項として保存
         operation = keyinput;                 // 演算種類記憶
         inputBufferCrear();                   // 入力バッファを空に
         // 電卓表示部更新しない
@@ -95,8 +95,8 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         screen.textContent = inputBuffer;     // 電卓表示部更新
         // 状態３のまま
 
-      } else if (action === OPERATIONKEY) {   // 演算キーを押下した場合 
-        data2 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第２項として保存     
+      } else if (action === OPERATIONKEY) {   // 演算キーを押下した場合
+        data2 = inputToNumber();              // 入力バッファのデータを数値化し第２項として保存 
         // 計算：［第１項］［第２項］［記憶している演算］
         let result = calculate(data1, data2, operation)
         // 　　　ここで計算エラー発生なら　
@@ -108,7 +108,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 電卓表示部更新
         resultDisplay(result)
 
-        data1 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第１項として保存
+        data1 = inputToNumber();              // 入力バッファのデータを数値化し第１項として保存
         operation = keyinput;                 // 演算種類記憶
         inputBufferCrear();                   // 入力バッファを空に
         // 電卓表示部更新しない
@@ -116,7 +116,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         state = 2;                            // 状態２に遷移
 
       } else if (action === EQUALKEY) {       // イコールキーを押下した場合
-        data2 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第２項として保存     
+        data2 = inputToNumber();              // 入力バッファのデータを数値化し第２項として保存
         // 計算：［第１項］［第２項］［記憶している演算］
         let result = calculate(data1, data2, operation)
         // 　　　ここで計算エラー発生なら　
@@ -186,30 +186,40 @@ function calculate(value1 = 0, value2 = 0, ope = "+"){
 }
 
 // キー入力追加、電卓表示部更新、入力桁数チェック
-const numberDisplay = keyinput => {
-  if (inputBuffer.length <= 8)  {       // 入力できる最大文字数追加
-    inputBuffer += keyinput;            // 入力バッファにキー入力追加
-    screen.textContent = inputBuffer;   // 電卓表示部更新
-  } 
+function numberDisplay(keyinput = "0") {
+  if (inputBuffer === "0") {            // 「０」がセットされている場合
+    inputBuffer = keyinput;             // 入力バッファにキー入力設定（追加せず「０」→数値文字に置き換え）
+  } else {
+    if (inputBuffer.length <= 8)  {     // 入力できる最大文字数追加
+      inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
+    }
+  }
+  screen.textContent = inputBuffer;     // 電卓表示部更新 
 };
 
 // 入力バッファを計算結果に更新、電卓表示部更新
 function resultDisplay(result = 0) {
-  inputBuffer = result;               // 入力バッファを計算結果に更新
+  inputBuffer = result.toString(10);; // 入力バッファを計算結果に更新
   screen.textContent = inputBuffer;   // 電卓表示部更新
 }
 
+// 入力バッファを数値化し返却
+function inputToNumber() {
+  let data = 0
+  data = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し返却
+  return data;
+}
 
 // 入力バッファを空に
 const inputBufferCrear = () => {
-  inputBuffer = "";                     // 入力バッファを空に
+  inputBuffer = "0";                     // 入力バッファを空に
 };
 
 // ACを押した場合の動作
 const allCrear = () => {
   state = 0;
   operation = "+";
-  inputBuffer = "";
+  inputBuffer = "0";
   data1 = 0;
   data2 = 0;
 
@@ -219,7 +229,7 @@ const allCrear = () => {
 
 // 数字キーを押したとき
 const numericKey = data => {
-  stateChange(NUMERICKEY, data); 
+  stateChange(NUMERICKEY, data.toString(10)); 
 };
 
 // 演算キーを押したとき
@@ -231,6 +241,10 @@ const calclateKey = data => {
   }
 };
 
+// 「.」キーを押したとき。文字列から.を見つけ、入力を制限する
+const inputDot = data => {
+
+};
 
 // イベントリスナーを登録
 document.querySelector('#btn-allcrear').addEventListener('click',allCrear);
@@ -249,6 +263,9 @@ document.querySelector('#btn-divide').addEventListener('click',()=> {
 });
 document.querySelector('#btn-equal').addEventListener('click',()=> {
   calclateKey('=')
+});
+document.querySelector('#btn-dot').addEventListener('click',()=> {
+  inputDot('.')
 });
 
 document.querySelector('#btn-zero').addEventListener('click',()=> {
