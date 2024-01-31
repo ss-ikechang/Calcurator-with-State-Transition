@@ -1,122 +1,81 @@
-let symbol = "+";
-let total = "";
-let currentValue = "";
-let flag = 0; // 数字 = 0, 演算子 = 1
+// 状態管理数値変数
+// 状態0 ：起動後または「C」キーでの初期化後
+// 状態1 ：第一項数値入力中
+// 状態2 ：第一項数値入力後の演算キー入力中
+// 状態3 ：第二項数値入力中
+// 状態4 ：結果表示時中
+// 状態99：計算エラー時中
+let state = 0;
+// 演算種類記憶文字列
+let operation = "+";
+// 入力バッファ
+let inputBuffer = "";
+// 計算第１項数値変数
+let data1 = 0;
+// 計算第２項数値変数
+let data2 = 0;
 
+// アクション定義変数
+const NUMERICKEY   = 0          // 数値キー
+const OPERATIONKEY = 1          // 演算キー
+const EQUALKEY     = 2          // イコールキー
+
+// 電卓表示部
 const screen = document.getElementById("screen");
 
-// 数字を入力
+// 状態遷移関数
+function stateChange(action = NUMERICKEY, keyinput = "") {
+  console.log(`状態：${state}`);
+  console.log(`キー入力：${keyinput}`);
+
+  switch (state) {
+    case 0:                                   // 状態0 ：起動後または「C」キーでの初期化後
+      if (action == NUMERICKEY) {             // 数値キーを押下した場合
+        
+        if (inputBuffer.length <= 8)  {       // 入力できる最大文字数まで追加
+          inputBuffer += keyinput;            // 入力バッファにキー入力追加
+          screen.textContent = inputBuffer;   // 電卓表示部更新
+        } 
+        state = 1;  // 状態１に遷移
+      } else if (action == OPERATIONKEY) {    // 演算キーを押下した場合
+        // 状態０のまま
+      } else if (action == EQUALKEY) {        // イコールキーを押下した場合
+        // 状態０のまま
+      } else {                                // それ以外のケース
+        // それ以外のケース
+      }
+      break;
+
+    case 1:                                   // 状態1 ：第一項数値入力中
+      if (action == NUMERICKEY) {             // 数値キーを押下した場合
+        if (inputBuffer.length <= 8)  {       // 入力できる最大文字数追加
+          inputBuffer += keyinput;            // 入力バッファにキー入力追加
+          screen.textContent = inputBuffer;   // 電卓表示部更新
+        } 
+        // 状態１のまま
+      } else if (action == OPERATIONKEY) {    // 演算キーを押下した場合
+        // 仮実装
+      } else if (action == EQUALKEY) {        // イコールキーを押下した場合
+        // 仮実装
+      } else {                                // それ以外のケース
+        // それ以外のケース
+      }
+      break;
+      
+    default:
+      // 式がいずれの値とも一致しないときに実行する処理;
+  }  
+}
+
+
+
+// 数字キーを押したとき
 const inputValue = data => {
-  if (currentValue.length <= 8) { // 入力できる最大文字数
-    flag = 0;
-    currentValue += data;
-    screen.textContent = currentValue;
-  }
+  stateChange(NUMERICKEY, data); 
 };
 
-// 文字列から.を見つけ、入力を制限する
-const inputDot = data => {
-  if (!currentValue.includes(".")) {
-    currentValue += data;
-    screen.textContent = currentValue;
-  }
-};
-
-// プラスマイナスの反転
-const inverted = () => {
-  if (currentValue === "") { // 合計の数字を反転
-    total = -total;
-    screen.textContent = total;
-  } else { // 入力した数字を反転
-    currentValue = -currentValue;
-    screen.textContent = currentValue;
-  }
-};
-
-// 計算をする
-const calclation = data => {
-  if (flag === 0 && data !== "=") { // =以外の記号を押した
-    flag = 1;
-
-    let formula = total + symbol + currentValue;
-    total = eval(formula);
-
-    symbol = data;
-    currentValue = "";
-    screen.textContent = total;
-
-  } else if (flag === 1 && data === "=") { // =を２回以上連打した
-    let formula = total + symbol + total;
-    total = eval(formula);
-
-    currentValue = "";
-    screen.textContent = total;
-
-  } else if (data === "=") { // =を一回押した
-    flag = 1;
-
-    let formula = total + symbol + currentValue;
-    total = eval(formula);
-
-    currentValue = "";
-    screen.textContent = total;
-
-  } else { // =を押した後数字を入力せず記号を押した
-    symbol = data;
-  }
-};
-
-const percent = () => {
-  if(symbol === "+" || symbol === "-") { // 足し算、引き算の場合の動作
-   let formula = currentValue / 100;
-   formula = total * formula;
-   currentValue = eval(formula);
-   
-   screen.textContent = currentValue;
- }else { // それ以外(数字のみ、掛け算、割り算の動作)
-   let formula = currentValue / 100;
-   currentValue = eval(formula);
-
-   screen.textContent = currentValue;
- }
-};
-
-
-// ACを押した場合の動作
-const allCrear = () => {
-  symbol = "+";
-  total = "";
-  currentValue = "";
-  flag = 0;
-  screen.textContent = "0";
-};
 
 // イベントリスナーを登録
-document.querySelector('#btn-allcrear').addEventListener('click',allCrear);
-document.querySelector('#btn-inverted').addEventListener('click',inverted);
-document.querySelector('#btn-percent').addEventListener('click',percent);
-
-// 【JavaScript】addEventListenerのコールバック関数に引数を渡す -
-// https://wild-outdoorlife.com/javascript/addeventlistener-callback/
-document.querySelector('#btn-add').addEventListener('click',()=> {
-  calclation('+')
-});
-document.querySelector('#btn-subtract').addEventListener('click',()=> {
-  calclation('-')
-});
-document.querySelector('#btn-multiply').addEventListener('click',()=> {
-  calclation('*')
-});
-document.querySelector('#btn-divide').addEventListener('click',()=> {
-  calclation('/')
-});
-document.querySelector('#btn-equal').addEventListener('click',()=> {
-  calclation('=')
-});
-document.querySelector('#btn-dot').addEventListener('click',()=> {
-  inputDot('.')
-});
-
 document.querySelector('#btn-zero').addEventListener('click',()=> {
   inputValue(0)
 });
