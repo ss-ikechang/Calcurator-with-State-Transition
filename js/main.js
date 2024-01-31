@@ -96,7 +96,24 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 状態３のまま
 
       } else if (action === OPERATIONKEY) {   // 演算キーを押下した場合 
-        // 未定：仮実装：何もしない
+        data2 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第２項として保存     
+        // 計算：［第１項］［第２項］［記憶している演算］
+        let result = calculate(data1, data2, operation)
+        // 　　　ここで計算エラー発生なら　
+        // 　　　　　入力バッファを空に
+        // 　　　　　電卓表示部をエラー表示に更新　　　　　
+        // 　　　　　状態９９に遷移
+
+        // 入力バッファを計算結果に更新
+        // 電卓表示部更新
+        resultDisplay(result)
+
+        data1 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第１項として保存
+        operation = keyinput;                 // 演算種類記憶
+        inputBufferCrear();                   // 入力バッファを空に
+        // 電卓表示部更新しない
+        
+        state = 2;                            // 状態２に遷移
 
       } else if (action === EQUALKEY) {       // イコールキーを押下した場合
         data2 = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し第２項として保存     
@@ -110,6 +127,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 入力バッファを計算結果に更新
         // 電卓表示部更新
         resultDisplay(result)
+
         state = 4;                            // 状態４に遷移
         
       } else {                                // それ以外のケース
