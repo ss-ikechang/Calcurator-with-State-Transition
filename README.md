@@ -15,6 +15,11 @@ https://ss-ikechang.github.io/Calcurator-with-State-Transition/
 ![状態遷移表](https://github.com/ss-ikechang/Calcurator-with-State-Transition/blob/main/doc/table.png "状態遷移表")
 
 ## 未だ
+JavaScript習熟の目的から離れるため、下記は今回実装しない。
+- ゼロ割エラーのハンドリング
+- 「%」「+/-」ボタンの実装
+- 他、状態遷移表の黄色の箇所は未実装
+
 
 ## 得られた知見
 
