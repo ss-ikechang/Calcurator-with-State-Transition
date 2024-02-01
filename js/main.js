@@ -154,7 +154,8 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
       
 
     default:
-      // 式がいずれの値とも一致しないときに実行する処理;
+      // 式がいずれの値とも一致しないときに実行する処理
+      break;
   }  
 }
 
