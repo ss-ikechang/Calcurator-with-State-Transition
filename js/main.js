@@ -199,7 +199,7 @@ function numberDisplay(keyinput = "0") {
         if (!inputBuffer.includes(".")) {  // 入力バッファが「.」を含んでないなら
           inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
         }
-      }　else {
+      } else {
         inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
       }
     }
