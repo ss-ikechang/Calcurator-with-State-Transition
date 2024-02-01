@@ -69,3 +69,14 @@ function numberDisplay(keyinput = "0") {
 ``````
 参考  
 [厳密等価 (===) - JavaScript | MDN](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Strict_equality)
+
+### 小数計算の誤差がひどい
+0.1 + 0.2 = 0.30000000000000004 になる。。。
+```
+console.log(0.1+0.2);
+0.30000000000000004
+undefined
+```
+JavaScriptではこれ以上どうしようもないのか。。
+
+[JavaScriptでの小数点の計算の誤差について #JavaScript - Qiita](https://qiita.com/k_moto/items/0b576a3351b77fb0aa98)
