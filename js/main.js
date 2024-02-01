@@ -188,10 +188,20 @@ function calculate(value1 = 0, value2 = 0, ope = "+"){
 // キー入力追加、電卓表示部更新、入力桁数チェック
 function numberDisplay(keyinput = "0") {
   if (inputBuffer === "0") {            // 「０」がセットされている場合
-    inputBuffer = keyinput;             // 入力バッファにキー入力設定（追加せず「０」→数値文字に置き換え）
+    if (keyinput === ".") {             // 「.」が押下された
+      inputBuffer = "0.";               // 入力バッファに「0.」設定
+    } else {
+      inputBuffer = keyinput;           // 入力バッファにキー入力設定（追加せず「０」→数値文字に置き換え）
+    }
   } else {
-    if (inputBuffer.length <= 8)  {     // 入力できる最大文字数追加
-      inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
+    if (inputBuffer.length <= 8)  {     // 入力できる最大文字数以下なら
+      if (keyinput === ".") {             // 「.」が押下された
+        if (!inputBuffer.includes(".")) {  // 入力バッファが「.」を含んでないなら
+          inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
+        }
+      }　else {
+        inputBuffer = inputBuffer.concat(keyinput);     // 入力バッファにキー入力追加
+      }
     }
   }
   screen.textContent = inputBuffer;     // 電卓表示部更新 
@@ -206,7 +216,7 @@ function resultDisplay(result = 0) {
 // 入力バッファを数値化し返却
 function inputToNumber() {
   let data = 0
-  data = parseInt(inputBuffer, 10);    // 入力バッファのデータを数値化し返却
+  data = parseFloat(inputBuffer);    // 入力バッファのデータを数値化し返却
   return data;
 }
 
@@ -242,8 +252,9 @@ const calclateKey = data => {
 };
 
 // 「.」キーを押したとき。文字列から.を見つけ、入力を制限する
+// 「.」は数値キー扱い
 const inputDot = data => {
-
+  stateChange(NUMERICKEY, data); 
 };
 
 // イベントリスナーを登録
