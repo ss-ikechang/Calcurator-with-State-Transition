@@ -61,9 +61,8 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
         // イコールキーを押下した場合
-        inputBufferCrear(); // 入力バッファを空に
         // 電卓表示部更新しない
-        state = 0; // 状態０に遷移
+        state = 4; // 状態４に遷移
       } else if (action === INVERTKEY) {
         // 反転キーを押下した場合
         invertDisplay(); // 符号反転表示
@@ -151,7 +150,11 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         state = 1; // 状態１に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        // 未定：仮実装：何もしない
+        data1 = inputToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        operation = keyinput; // 演算種類記憶
+        inputBufferCrear(); // 入力バッファを空に
+        // 電卓表示部更新しない
+        state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
         // イコールキーを押下した場合
         // 未定：仮実装：何もしない
