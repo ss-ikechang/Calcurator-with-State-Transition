@@ -51,7 +51,6 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
         numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
-        screen.textContent = inputBuffer; // 電卓表示部更新
         // 状態１のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
@@ -77,9 +76,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 2: // 状態2 ：第一項数値入力後の演算キー入力中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-
         numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
-        screen.textContent = inputBuffer; // 電卓表示部更新
         state = 3; // 状態３に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
@@ -100,9 +97,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 3: // 状態3 ：第二項数値入力中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-
         numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
-        screen.textContent = inputBuffer; // 電卓表示部更新
         // 状態３のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
