@@ -54,9 +54,9 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 状態１のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data1 = inputToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
         operation = keyinput; // 演算種類記憶
-        inputBufferCrear(); // 入力バッファを空に
+        inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
@@ -81,7 +81,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 演算キーを押下した場合
 
         operation = keyinput; // 演算種類記憶
-        inputBufferCrear(); // 入力バッファを空に
+        inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         // 状態２のまま
       } else if (action === EQUALKEY) {
@@ -100,9 +100,9 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 状態３のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data2 = inputToNumber(); // 入力バッファのデータを数値化し第２項として保存
+        data2 = inputBufferToNumber(); // 入力バッファのデータを数値化し第２項として保存
         // 計算：［第１項］［第２項］［記憶している演算］
-        let result = calculate(data1, data2, operation);
+        let result = calculateNumber(data1, data2, operation);
         // 　　　ここで計算エラー発生なら
         // 　　　　　入力バッファを空に
         // 　　　　　電卓表示部をエラー表示に更新
@@ -112,17 +112,17 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         // 電卓表示部更新
         resultDisplay(result);
 
-        data1 = inputToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
         operation = keyinput; // 演算種類記憶
-        inputBufferCrear(); // 入力バッファを空に
+        inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
 
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
         // イコールキーを押下した場合
-        data2 = inputToNumber(); // 入力バッファのデータを数値化し第２項として保存
+        data2 = inputBufferToNumber(); // 入力バッファのデータを数値化し第２項として保存
         // 計算：［第１項］［第２項］［記憶している演算］
-        let result = calculate(data1, data2, operation);
+        let result = calculateNumber(data1, data2, operation);
         // 　　　ここで計算エラー発生なら
         // 　　　　　入力バッファを空に
         // 　　　　　電卓表示部をエラー表示に更新
@@ -145,14 +145,14 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 4: // 状態4 ：結果表示時中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        inputBufferCrear(); // 入力バッファを空に
+        inputBufferClear(); // 入力バッファを空に
         numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
         state = 1; // 状態１に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data1 = inputToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
         operation = keyinput; // 演算種類記憶
-        inputBufferCrear(); // 入力バッファを空に
+        inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
@@ -171,7 +171,7 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
 }
 
 // 計算：［第１項］［記憶している演算］［第２項］
-function calculate(value1 = 0, value2 = 0, ope = "+") {
+function calculateNumber(value1 = 0, value2 = 0, ope = "+") {
   let result = 0;
 
   switch (ope) {
@@ -201,7 +201,7 @@ function calculate(value1 = 0, value2 = 0, ope = "+") {
   return result;
 }
 
-// キー入力追加、電卓表示部更新、入力桁数チェック
+// キー入力追加、入力桁数チェック、電卓表示部更新
 function numberDisplay(keyinput = "0") {
   if (inputBuffer === "0") {
     // 「０」がセットされている場合
@@ -234,7 +234,7 @@ function resultDisplay(result = 0) {
   screen.textContent = inputBuffer; // 電卓表示部更新
 }
 
-// 符号反転表示
+// 符号反転、電卓表示部更新
 const invertDisplay = () => {
   if (inputBuffer.charAt(0) === "-") {
     inputBuffer = inputBuffer.slice(1);
@@ -245,19 +245,19 @@ const invertDisplay = () => {
 };
 
 // 入力バッファを数値化し返却
-function inputToNumber() {
+function inputBufferToNumber() {
   let data = 0;
   data = parseFloat(inputBuffer); // 入力バッファのデータを数値化し返却
   return data;
 }
 
 // 入力バッファを空に
-const inputBufferCrear = () => {
+const inputBufferClear = () => {
   inputBuffer = "0"; // 入力バッファを空に
 };
 
 // ACを押した場合の動作
-const allCrear = () => {
+const allClear = () => {
   state = 0;
   operation = "+";
   inputBuffer = "0";
@@ -284,7 +284,7 @@ const calclateKey = (data) => {
 
 // 「.」キーを押したとき。文字列から.を見つけ、入力を制限する
 // 「.」は数値キー扱い
-const inputDot = (data) => {
+const dotKey = (data) => {
   stateChange(NUMERICKEY, data);
 };
 
@@ -294,7 +294,7 @@ const invertKey = () => {
 };
 
 // イベントリスナーを登録
-document.querySelector("#btn-allcrear").addEventListener("click", allCrear);
+document.querySelector("#btn-allcrear").addEventListener("click", allClear);
 
 document.querySelector("#btn-add").addEventListener("click", () => {
   calclateKey("+");
@@ -316,7 +316,7 @@ document.querySelector("#btn-percent").addEventListener("click", () => {
 });
 
 document.querySelector("#btn-dot").addEventListener("click", () => {
-  inputDot(".");
+  dotKey(".");
 });
 
 document.querySelector("#btn-zero").addEventListener("click", () => {
