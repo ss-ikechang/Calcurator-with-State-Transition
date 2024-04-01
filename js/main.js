@@ -191,6 +191,10 @@ function calculate(value1 = 0, value2 = 0, ope = "+") {
       result = value1 / value2;
       break;
 
+    case "%":
+      result = value1 * (value2 / 100);
+      break;
+
     default:
     // 式がいずれの値とも一致しないときに実行する処理;
   }
@@ -307,6 +311,10 @@ document.querySelector("#btn-divide").addEventListener("click", () => {
 document.querySelector("#btn-equal").addEventListener("click", () => {
   calclateKey("=");
 });
+document.querySelector("#btn-percent").addEventListener("click", () => {
+  calclateKey("%");
+});
+
 document.querySelector("#btn-dot").addEventListener("click", () => {
   inputDot(".");
 });
