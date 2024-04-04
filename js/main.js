@@ -1,3 +1,6 @@
+import { CalcModel } from "./CalcModel.js";
+const calcModel = new CalcModel();
+
 // 状態管理数値変数
 // 状態0 ：起動後または「C」キーでの初期化後
 // 状態1 ：第一項数値入力中
@@ -8,8 +11,6 @@
 let state = 0;
 // 演算種類記憶文字列
 let operation = "+";
-// 入力バッファ
-let inputBuffer = "0";
 // 計算第１項数値変数
 let data1 = 0;
 // 計算第２項数値変数
@@ -33,7 +34,8 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 0: // 状態0 ：起動後または「C」キーでの初期化後
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
+        // 入力バッファにキー入力追加・電卓表示部更新
+        screen.textContent = calcModel.numberDisplay(keyinput);
         state = 1; // 状態１に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
@@ -50,13 +52,15 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 1: // 状態1 ：第一項数値入力中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
+        // 入力バッファにキー入力追加・電卓表示部更新
+        screen.textContent = calcModel.numberDisplay(keyinput);
         // 状態１のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        // 入力バッファのデータを数値化し第１項として保存
+        data1 = calcModel.inputBufferToNumber();
         operation = keyinput; // 演算種類記憶
-        inputBufferClear(); // 入力バッファを空に
+        calcModel.inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
@@ -65,7 +69,8 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
         state = 4; // 状態４に遷移
       } else if (action === INVERTKEY) {
         // 反転キーを押下した場合
-        invertDisplay(); // 符号反転表示
+        // 符号反転表示・電卓表示部更新
+        screen.textContent = calcModel.invertDisplay();
       } else {
         // それ以外のケース
         // それ以外のケース
@@ -75,13 +80,14 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 2: // 状態2 ：第一項数値入力後の演算キー入力中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
+        // 入力バッファにキー入力追加・電卓表示部更新
+        screen.textContent = calcModel.numberDisplay(keyinput);
         state = 3; // 状態３に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
 
         operation = keyinput; // 演算種類記憶
-        inputBufferClear(); // 入力バッファを空に
+        calcModel.inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         // 状態２のまま
       } else if (action === EQUALKEY) {
@@ -96,11 +102,13 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 3: // 状態3 ：第二項数値入力中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
+        // 入力バッファにキー入力追加・電卓表示部更新
+        screen.textContent = calcModel.numberDisplay(keyinput);
         // 状態３のまま
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data2 = inputBufferToNumber(); // 入力バッファのデータを数値化し第２項として保存
+        // 入力バッファのデータを数値化し第２項として保存
+        data2 = calcModel.inputBufferToNumber();
         // 計算：［第１項］［第２項］［記憶している演算］
         let result = calculateNumber(data1, data2, operation);
         // 　　　ここで計算エラー発生なら
@@ -110,17 +118,19 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
 
         // 入力バッファを計算結果に更新
         // 電卓表示部更新
-        resultDisplay(result);
+        screen.textContent = calcModel.resultDisplay(result);
 
-        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        // 入力バッファのデータを数値化し第１項として保存
+        data1 = calcModel.inputBufferToNumber();
         operation = keyinput; // 演算種類記憶
-        inputBufferClear(); // 入力バッファを空に
+        calcModel.inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
 
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
         // イコールキーを押下した場合
-        data2 = inputBufferToNumber(); // 入力バッファのデータを数値化し第２項として保存
+        // 入力バッファのデータを数値化し第２項として保存
+        data2 = calcModel.inputBufferToNumber();
         // 計算：［第１項］［第２項］［記憶している演算］
         let result = calculateNumber(data1, data2, operation);
         // 　　　ここで計算エラー発生なら
@@ -130,12 +140,13 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
 
         // 入力バッファを計算結果に更新
         // 電卓表示部更新
-        resultDisplay(result);
+        screen.textContent = calcModel.resultDisplay(result);
 
         state = 4; // 状態４に遷移
       } else if (action === INVERTKEY) {
         // 反転キーを押下した場合
-        invertDisplay(); // 符号反転表示
+        // 符号反転表示・電卓表示部更新
+        screen.textContent = calcModel.invertDisplay();
       } else {
         // それ以外のケース
         // それ以外のケース
@@ -145,14 +156,17 @@ function stateChange(action = NUMERICKEY, keyinput = "") {
     case 4: // 状態4 ：結果表示時中
       if (action === NUMERICKEY) {
         // 数値キーを押下した場合
-        inputBufferClear(); // 入力バッファを空に
-        numberDisplay(keyinput); // 入力バッファにキー入力追加・電卓表示部更新
+        // 入力バッファを空に
+        calcModel.inputBufferClear();
+        // 入力バッファにキー入力追加・電卓表示部更新
+        screen.textContent = calcModel.numberDisplay(keyinput);
         state = 1; // 状態１に遷移
       } else if (action === OPERATIONKEY) {
         // 演算キーを押下した場合
-        data1 = inputBufferToNumber(); // 入力バッファのデータを数値化し第１項として保存
+        // 入力バッファのデータを数値化し第１項として保存
+        data1 = calcModel.inputBufferToNumber();
         operation = keyinput; // 演算種類記憶
-        inputBufferClear(); // 入力バッファを空に
+        calcModel.inputBufferClear(); // 入力バッファを空に
         // 電卓表示部更新しない
         state = 2; // 状態２に遷移
       } else if (action === EQUALKEY) {
@@ -201,66 +215,11 @@ function calculateNumber(value1 = 0, value2 = 0, ope = "+") {
   return result;
 }
 
-// キー入力追加、入力桁数チェック、電卓表示部更新
-function numberDisplay(keyinput = "0") {
-  if (inputBuffer === "0") {
-    // 「０」がセットされている場合
-    if (keyinput === ".") {
-      // 「.」が押下された
-      inputBuffer = "0."; // 入力バッファに「0.」設定
-    } else {
-      inputBuffer = keyinput; // 入力バッファにキー入力設定（追加せず「０」→数値文字に置き換え）
-    }
-  } else {
-    if (inputBuffer.length <= 8) {
-      // 入力できる最大文字数以下なら
-      if (keyinput === ".") {
-        // 「.」が押下された
-        if (!inputBuffer.includes(".")) {
-          // 入力バッファが「.」を含んでないなら
-          inputBuffer = inputBuffer.concat(keyinput); // 入力バッファにキー入力追加
-        }
-      } else {
-        inputBuffer = inputBuffer.concat(keyinput); // 入力バッファにキー入力追加
-      }
-    }
-  }
-  screen.textContent = inputBuffer; // 電卓表示部更新
-}
-
-// 入力バッファを計算結果に更新、電卓表示部更新
-function resultDisplay(result = 0) {
-  inputBuffer = result.toString(10); // 入力バッファを計算結果に更新
-  screen.textContent = inputBuffer; // 電卓表示部更新
-}
-
-// 符号反転、電卓表示部更新
-const invertDisplay = () => {
-  if (inputBuffer.charAt(0) === "-") {
-    inputBuffer = inputBuffer.slice(1);
-  } else {
-    inputBuffer = "-" + inputBuffer;
-  }
-  screen.textContent = inputBuffer; // 電卓表示部更新
-};
-
-// 入力バッファを数値化し返却
-function inputBufferToNumber() {
-  let data = 0;
-  data = parseFloat(inputBuffer); // 入力バッファのデータを数値化し返却
-  return data;
-}
-
-// 入力バッファを空に
-const inputBufferClear = () => {
-  inputBuffer = "0"; // 入力バッファを空に
-};
-
 // ACを押した場合の動作
 const allClear = () => {
+  calcModel.inputBufferClear();
   state = 0;
   operation = "+";
-  inputBuffer = "0";
   data1 = 0;
   data2 = 0;
 
