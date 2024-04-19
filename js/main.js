@@ -15,13 +15,7 @@ const calcModel = new CalcModel(new CalcView(screen));
 
 // ACを押した場合の動作
 const allClearKey = () => {
-  calcModel.inputBufferClear();
-  // state = 0;
-  // operation = "+";
-  // data1 = 0;
-  // data2 = 0;
-
-  screen.textContent = "0";
+  calcModel.initialize();
 };
 
 // 数字キーを押したとき

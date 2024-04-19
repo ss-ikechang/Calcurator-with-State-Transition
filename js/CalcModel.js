@@ -1,3 +1,4 @@
+import { CalcView } from "./CalcView.js";
 console.log("CalcModel.js: loaded");
 
 // アクション定義変数
@@ -43,6 +44,18 @@ export class CalcModel {
     this.#data2 = 0;
     // 計算機VIEW
     this.#calcView = calcview;
+  }
+
+  // 初期化
+  initialize() {
+    this.inputBufferClear();
+    this.#state = 0;
+    this.#operation = "+";
+    this.#data1 = 0;
+    this.#data2 = 0;
+
+    // screen.textContent = "0";
+    this.#calcView.clear();
   }
 
   // 状態遷移関数
