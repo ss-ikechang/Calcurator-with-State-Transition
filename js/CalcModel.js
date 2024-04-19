@@ -1,5 +1,11 @@
 console.log("CalcModel.js: loaded");
 
+class CalcView {
+  update(newStr) {
+    console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
+  }
+}
+
 // アクション定義変数
 const NUMERICKEY = 0; // 数値キー
 const OPERATIONKEY = 1; // 演算キー
@@ -25,8 +31,10 @@ export class CalcModel {
   #data1;
   // 計算第２項数値変数
   #data2;
+  // 計算機VIEW
+  #calcView;
 
-  constructor(screen) {
+  constructor() {
     console.log("CalcModel initialized");
     this.#inputBuffer = "0";
     console.log(this.#inputBuffer);
@@ -39,6 +47,8 @@ export class CalcModel {
     this.#data1 = 0;
     // 計算第２項数値変数
     this.#data2 = 0;
+    // 計算機VIEW
+    this.#calcView = new CalcView();
   }
 
   // 状態遷移関数
@@ -263,16 +273,16 @@ export class CalcModel {
         }
       }
     }
-    console.log(`screen.textContent：${this.#inputBuffer}`);
-    // screen.textContent = this.#inputBuffer; // 電卓表示部更新
+    // 電卓表示部更新
+    this.#calcView.update(this.#inputBuffer);
     return this.#inputBuffer;
   }
 
   // 入力バッファを計算結果に更新、電卓表示部更新
   resultDisplay(result = 0) {
     this.#inputBuffer = result.toString(10); // 入力バッファを計算結果に更新
-    console.log(`screen.textContent：${this.#inputBuffer}`);
-    // screen.textContent = this.#inputBuffer; // 電卓表示部更新
+    // 電卓表示部更新
+    this.#calcView.update(this.#inputBuffer);
     return this.#inputBuffer;
   }
 
@@ -283,8 +293,8 @@ export class CalcModel {
     } else {
       this.#inputBuffer = "-" + this.#inputBuffer;
     }
-    console.log(`screen.textContent：${this.#inputBuffer}`);
-    // screen.textContent = this.#inputBuffer; // 電卓表示部更新
+    // 電卓表示部更新
+    this.#calcView.update(this.#inputBuffer);
     return this.#inputBuffer;
   }
 
