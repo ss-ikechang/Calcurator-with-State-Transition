@@ -9,6 +9,16 @@ const OPERATIONKEY = 1; // 演算キー
 const EQUALKEY = 2; // イコールキー
 const INVERTKEY = 3; // 反転キー
 
+export class CalcView {
+  constructor() {
+    console.log("CalcView initialized");
+  }
+
+  update(newStr) {
+    console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
+  }
+}
+
 // 電卓model
 const calcModel = new CalcModel();
 

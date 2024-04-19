@@ -1,10 +1,5 @@
+import { CalcView } from "./main.js";
 console.log("CalcModel.js: loaded");
-
-class CalcView {
-  update(newStr) {
-    console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
-  }
-}
 
 // アクション定義変数
 const NUMERICKEY = 0; // 数値キー
