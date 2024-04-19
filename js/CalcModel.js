@@ -1,4 +1,3 @@
-import { CalcView } from "./main.js";
 console.log("CalcModel.js: loaded");
 
 // アクション定義変数

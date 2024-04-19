@@ -1,25 +1,11 @@
 import { CalcModel } from "./CalcModel.js";
+import { CalcView } from "./CalcView.js";
 
 // アクション定義変数
 const NUMERICKEY = 0; // 数値キー
 const OPERATIONKEY = 1; // 演算キー
 const EQUALKEY = 2; // イコールキー
 const INVERTKEY = 3; // 反転キー
-
-export class CalcView {
-  // 電卓表示部エレメント
-  #displayElement;
-
-  constructor(screenElement) {
-    this.#displayElement = screenElement;
-    console.log("CalcView initialized");
-  }
-
-  update(newStr) {
-    // console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
-    this.#displayElement.textContent = newStr; // 電卓表示部更新
-  }
-}
 
 // 電卓表示部
 const screen = document.getElementById("screen");
