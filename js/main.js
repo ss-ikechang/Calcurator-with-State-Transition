@@ -15,7 +15,8 @@ export class CalcView {
   }
 
   update(newStr) {
-    console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
+    // console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
+    screen.textContent = newStr; // 電卓表示部更新
   }
 }
 
