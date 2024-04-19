@@ -10,13 +10,17 @@ const EQUALKEY = 2; // イコールキー
 const INVERTKEY = 3; // 反転キー
 
 export class CalcView {
+  // 電卓表示部エレメント
+  #displayElement;
+
   constructor() {
+    this.#displayElement = document.getElementById("screen");
     console.log("CalcView initialized");
   }
 
   update(newStr) {
     // console.log(newStr); // 仮の実装。実際にはHTML要素などに表示する必要があります。
-    screen.textContent = newStr; // 電卓表示部更新
+    this.#displayElement.textContent = newStr; // 電卓表示部更新
   }
 }
 
