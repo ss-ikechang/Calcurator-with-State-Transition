@@ -1,8 +1,5 @@
 import { CalcModel } from "./CalcModel.js";
 
-// 電卓表示部
-const screen = document.getElementById("screen");
-
 // アクション定義変数
 const NUMERICKEY = 0; // 数値キー
 const OPERATIONKEY = 1; // 演算キー
@@ -13,8 +10,8 @@ export class CalcView {
   // 電卓表示部エレメント
   #displayElement;
 
-  constructor() {
-    this.#displayElement = document.getElementById("screen");
+  constructor(screenElement) {
+    this.#displayElement = screenElement;
     console.log("CalcView initialized");
   }
 
@@ -24,8 +21,11 @@ export class CalcView {
   }
 }
 
+// 電卓表示部
+const screen = document.getElementById("screen");
+
 // 電卓model
-const calcModel = new CalcModel();
+const calcModel = new CalcModel(new CalcView(screen));
 
 // ACを押した場合の動作
 const allClearKey = () => {

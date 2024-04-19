@@ -29,7 +29,7 @@ export class CalcModel {
   // 計算機VIEW
   #calcView;
 
-  constructor() {
+  constructor(calcview) {
     console.log("CalcModel initialized");
     this.#inputBuffer = "0";
     console.log(this.#inputBuffer);
@@ -43,7 +43,7 @@ export class CalcModel {
     // 計算第２項数値変数
     this.#data2 = 0;
     // 計算機VIEW
-    this.#calcView = new CalcView();
+    this.#calcView = calcview;
   }
 
   // 状態遷移関数
