@@ -29,7 +29,10 @@ export class CalcModel {
   // 計算機VIEW
   #calcView;
 
-  constructor(calcview) {
+  // 状態変化観察者
+  observer;
+
+  constructor() {
     console.log("CalcModel initialized");
     this.#inputBuffer = "0";
     console.log(this.#inputBuffer);
@@ -43,7 +46,17 @@ export class CalcModel {
     // 計算第２項数値変数
     this.#data2 = 0;
     // 計算機VIEW
-    this.#calcView = calcview;
+    // this.#calcView = calcview;
+  }
+
+  // 観察者追加
+  setObserver(observer) {
+    this.observer = observer;
+  }
+
+  // 観察者へ通知
+  notifyObserver() {
+    this.observer.notify(this);
   }
 
   // 初期化
@@ -55,7 +68,8 @@ export class CalcModel {
     this.#data2 = 0;
 
     // screen.textContent = "0";
-    this.#calcView.clear();
+    // this.#calcView.clear();
+    console.log(`状態：${this.#state}：入力：initializeed`);
   }
 
   // 状態遷移関数
@@ -281,7 +295,8 @@ export class CalcModel {
       }
     }
     // 電卓表示部更新
-    this.#calcView.update(this.#inputBuffer);
+    // this.#calcView.update(this.#inputBuffer);
+    this.notifyObserver();
     return this.#inputBuffer;
   }
 
@@ -289,7 +304,8 @@ export class CalcModel {
   resultDisplay(result = 0) {
     this.#inputBuffer = result.toString(10); // 入力バッファを計算結果に更新
     // 電卓表示部更新
-    this.#calcView.update(this.#inputBuffer);
+    // this.#calcView.update(this.#inputBuffer);
+    this.notifyObserver();
     return this.#inputBuffer;
   }
 
@@ -301,7 +317,8 @@ export class CalcModel {
       this.#inputBuffer = "-" + this.#inputBuffer;
     }
     // 電卓表示部更新
-    this.#calcView.update(this.#inputBuffer);
+    // this.#calcView.update(this.#inputBuffer);
+    this.notifyObserver();
     return this.#inputBuffer;
   }
 
@@ -315,5 +332,10 @@ export class CalcModel {
   // 入力バッファを空に
   inputBufferClear() {
     this.#inputBuffer = "0"; // 入力バッファを空に
+  }
+
+  // 入力バッファを返却
+  getInputBuffer() {
+    return this.#inputBuffer;
   }
 }
