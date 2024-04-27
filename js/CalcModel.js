@@ -274,7 +274,7 @@ export class CalcModel {
   numberDisplay(keyinput = "0") {
     if (this.#inputBuffer === "0") {
       // 「０」がセットされている場合
-      if (this.#inputBuffer === ".") {
+      if (keyinput === ".") {
         // 「.」が押下された
         this.#inputBuffer = "0."; // 入力バッファに「0.」設定
       } else {
